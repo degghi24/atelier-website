@@ -1,117 +1,119 @@
 /* Atelier Tang - main.js
-   Comportamento: menu mobile e validazione lato client del form.
-   Se JavaScript non e' disponibile il sito resta pienamente utilizzabile. */
+   Handles the navigation menu and client-side form validation.
+   The site remains usable when JavaScript is unavailable. */
 
 (function () {
   'use strict';
 
-  // Segnala al CSS che JavaScript e' attivo
+  // Let CSS know that JavaScript is available.
   document.documentElement.classList.add('js');
 
-  /* ---------- Menu mobile ---------- */
+  /* ---------- Navigation menu ---------- */
   var toggle = document.querySelector('.nav-toggle');
-  var menu = document.getElementById('menu-principale');
+  var menu = document.getElementById('primary-menu');
 
   if (toggle && menu) {
     toggle.addEventListener('click', function () {
-      var aperto = menu.classList.toggle('is-open');
-      toggle.setAttribute('aria-expanded', aperto ? 'true' : 'false');
+      var isOpen = menu.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
 
-    // Chiude il menu dopo il click su un link o con il tasto Esc
-    menu.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') {
+    // Close the menu after link activation or when Escape is pressed.
+    menu.addEventListener('click', function (event) {
+      if (event.target.tagName === 'A') {
         menu.classList.remove('is-open');
         toggle.setAttribute('aria-expanded', 'false');
       }
     });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && menu.classList.contains('is-open')) {
-        menu.classList.remove('is-openg');
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && menu.classList.contains('is-open')) {
+        menu.classList.remove('is-open');
         toggle.setAttribute('aria-expanded', 'false');
         toggle.focus();
       }
     });
   }
 
-  /* ---------- Validazione del form ---------- */
-  var form = document.getElementById('form-prenotazione');
+  /* ---------- Form validation ---------- */
+  var form = document.getElementById('booking-form');
   if (!form) { return; }
 
-  function errore(campo) {
-    return document.getElementById('err-' + campo.id);
+  function errorElement(field) {
+    return document.getElementById('error-' + field.id);
   }
 
-  function messaggio(campo) {
-    var v = campo.value.trim();
+  function validationMessage(field) {
+    var value = field.value.trim();
 
-    if (campo.type === 'checkbox') {
-      return campo.checked ? '' : 'Devi acconsentire al trattamento dei dati.';
+    if (field.type === 'checkbox') {
+      return field.checked ? '' : 'Devi acconsentire al trattamento dei dati.';
     }
-    if (campo.required && v === '') {
-      return campo.tagName === 'SELECT' ? 'Scegli un servizio.' : 'Questo campo è obbligatorio.';
+    if (field.required && value === '') {
+      return field.tagName === 'SELECT' ? 'Scegli un servizio.' : 'Questo campo è obbligatorio.';
     }
-    if (campo.id === 'nome' && v.length < 2) {
+    if (field.id === 'full-name' && value.length < 2) {
       return 'Inserisci almeno 2 caratteri.';
     }
-    if (campo.id === 'nome' && !/^[A-Za-zÀ-ÖØ-öø-ÿ' .-]+$/.test(v)) {
+    if (field.id === 'full-name' && !/^[A-Za-zÀ-ÖØ-öø-ÿ' .-]+$/.test(value)) {
       return 'Il nome può contenere solo lettere, spazi, apostrofi e trattini.';
     }
-    if (campo.id === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
+    if (field.id === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
       return 'Inserisci un indirizzo email valido, ad esempio nome@dominio.it.';
     }
-    if (campo.id === 'telefono' && v !== '' && !/^[0-9+ ]{6,20}$/.test(v)) {
+    if (field.id === 'phone' && value !== '' && !/^[0-9+ ]{6,20}$/.test(value)) {
       return 'Usa da 6 a 20 caratteri tra numeri, spazi e +.';
     }
-    if (campo.id === 'data' && v !== '') {
-      var oggi = new Date();
-      oggi.setHours(0, 0, 0, 0);
-      if (new Date(v) < oggi) { return 'Scegli una data a partire da oggi.'; }
+    if (field.id === 'preferred-date' && value !== '') {
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      var dateParts = value.split('-');
+      var selectedDate = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]));
+      if (selectedDate < today) { return 'Scegli una data a partire da oggi.'; }
     }
-    if (campo.id === 'messaggio' && (v.length < 10 || v.length > 1000)) {
+    if (field.id === 'message' && (value.length < 10 || value.length > 1000)) {
       return 'Il messaggio deve avere da 10 a 1000 caratteri.';
     }
     return '';
   }
 
-  function controlla(campo) {
-    var testo = messaggio(campo);
-    var box = errore(campo);
-    if (box) { box.textContent = testo; }
-    if (testo) {
-      campo.setAttribute('aria-invalid', 'true');
+  function validateField(field) {
+    var message = validationMessage(field);
+    var error = errorElement(field);
+    if (error) { error.textContent = message; }
+    if (message) {
+      field.setAttribute('aria-invalid', 'true');
     } else {
-      campo.removeAttribute('aria-invalid');
+      field.removeAttribute('aria-invalid');
     }
-    return testo === '';
+    return message === '';
   }
 
-  var campi = form.querySelectorAll('input:not([type="hidden"]), select, textarea');
+  var fields = form.querySelectorAll('input:not([type="hidden"]), select, textarea');
 
-  Array.prototype.forEach.call(campi, function (campo) {
-    campo.addEventListener('blur', function () { controlla(campo); });
-    // Dopo un errore, ricontrolla mentre l'utente corregge
-    campo.addEventListener('input', function () {
-      if (campo.getAttribute('aria-invalid') === 'true') { controlla(campo); }
+  Array.prototype.forEach.call(fields, function (field) {
+    field.addEventListener('blur', function () { validateField(field); });
+    // Revalidate the field as the user corrects an error.
+    field.addEventListener('input', function () {
+      if (field.getAttribute('aria-invalid') === 'true') { validateField(field); }
     });
   });
 
-  form.addEventListener('submit', function (e) {
-    var primoErrore = null;
-    Array.prototype.forEach.call(campi, function (campo) {
-      if (!controlla(campo) && !primoErrore) { primoErrore = campo; }
+  form.addEventListener('submit', function (event) {
+    var firstInvalidField = null;
+    Array.prototype.forEach.call(fields, function (field) {
+      if (!validateField(field) && !firstInvalidField) { firstInvalidField = field; }
     });
-    if (primoErrore) {
-      e.preventDefault();
-      primoErrore.focus();
+    if (firstInvalidField) {
+      event.preventDefault();
+      firstInvalidField.focus();
     }
   });
 
   form.addEventListener('reset', function () {
-    Array.prototype.forEach.call(campi, function (campo) {
-      campo.removeAttribute('aria-invalid');
-      var box = errore(campo);
-      if (box) { box.textContent = ''; }
+    Array.prototype.forEach.call(fields, function (field) {
+      field.removeAttribute('aria-invalid');
+      var error = errorElement(field);
+      if (error) { error.textContent = ''; }
     });
   });
 })();

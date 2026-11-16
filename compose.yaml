@@ -2,9 +2,9 @@ services:
   web:
     build: .
     ports:
-      - "8080:80"              # sito su http://localhost:8080
+      - "8080:80"              # Web application
     volumes:
-      - ./src:/var/www/html    # la cartella src è la radice del sito
+      - ./src:/var/www/html    # Docker web root
     environment:
       DB_HOST: db
       DB_NAME: ${DB_NAME}
@@ -23,7 +23,7 @@ services:
       MARIADB_PASSWORD: ${DB_PASSWORD}
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - dbdata:/var/lib/mysql                          # i dati sopravvivono ai riavvii
+      - dbdata:/var/lib/mysql                          # Persistent database data
       - ./db:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
@@ -33,7 +33,7 @@ services:
   phpmyadmin:
     image: phpmyadmin
     ports:
-      - "8081:80"              # phpMyAdmin su http://localhost:8081
+      - "8081:80"              # phpMyAdmin
     environment:
       PMA_HOST: db
     depends_on:

@@ -1,7 +1,7 @@
 /* ==========================================================
    Atelier Tang - style.css
-   Nessuna immagine esterna: texture di tessuto fatte in CSS.
-   Palette: inchiostro, gesso, filo rosso, lana grigia, lino.
+   Fabric textures are created with CSS.
+   Palette: ink, chalk, red thread, gray wool, and linen.
    ========================================================== */
 
 :root {
@@ -14,6 +14,9 @@
   --wool: #c9cdd2;
   --linen: #e6dccb;
   --night: #1f2b4a;
+  --navy: #14213d;
+  --ivory: #f7f4ef;
+  --logo-gold: #d9a86c;
   --line: #d3d6d9;
 
   --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
@@ -76,35 +79,74 @@ a:hover { color: var(--thread-dark); }
 }
 .skip-link:focus { top: .5rem; }
 
-/* ---------- Header e navigazione ---------- */
+/* ---------- Header and navigation ---------- */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
+  background: var(--navy);
+  border-bottom: 2px solid var(--logo-gold);
+}
+.site-header .header-inner,
+.site-header .main-nav,
+.site-header .main-nav ul {
+  background-color: var(--navy);
 }
 
 .header-inner {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
-  gap: .5rem 1rem;
-  padding-block: .6rem;
+  gap: .35rem .75rem;
+  padding-block: .45rem;
 }
 
 .logo {
   display: inline-flex;
-  flex-direction: column;
+  justify-self: start;
+  align-items: center;
+  gap: .65rem;
   text-decoration: none;
-  color: var(--ink);
   line-height: 1.1;
+}
+.logo img {
+  display: block;
+  flex: 0 0 auto;
+  width: clamp(60px, 6vw, 68px);
+  height: clamp(60px, 6vw, 68px);
+}
+.logo-copy {
+  display: block;
+  text-align: left;
+}
+.logo-title {
+  color: var(--ivory);
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+  font-weight: 700;
+  letter-spacing: .025em;
+  line-height: 1.15;
+}
+.logo-subtitle {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  margin: 0;
+  color: var(--ivory);
+  font-size: .75rem;
+  letter-spacing: .07em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
 }
 .logo-name { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 700; }
 .logo-sub { font-size: .8rem; color: var(--ink-soft); }
 
-.main-nav { width: 100%; }
+.main-nav {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  width: 100%;
+}
 .main-nav ul {
   display: flex;
   flex-wrap: wrap;
@@ -116,44 +158,87 @@ a:hover { color: var(--thread-dark); }
 .main-nav a {
   display: block;
   padding: .45rem .7rem;
-  color: var(--ink);
+  color: var(--ivory);
   text-decoration: none;
   border-bottom: 2px solid transparent;
 }
 .main-nav a:hover,
-.main-nav a[aria-current="page"] { border-bottom-color: var(--thread); }
+.main-nav a[aria-current="page"] { border-bottom-color: var(--logo-gold); }
+.main-nav a:hover { color: var(--ivory); }
 .main-nav .nav-login {
-  border: 1px solid var(--ink);
+  color: var(--ivory);
+  border: 1px solid var(--ivory);
   border-radius: var(--radius);
 }
-.main-nav .nav-login:hover { background: var(--ink); color: var(--paper); }
+.main-nav .nav-login:hover { background: var(--ivory); color: var(--navy); }
 
-/* Il pulsante del menu compare solo se JavaScript e' attivo (degradazione elegante) */
+/* Show the menu toggle only when JavaScript is available. */
 .nav-toggle { display: none; }
 
 html.js .nav-toggle {
-  display: inline-block;
-  padding: .5rem 1rem;
+  display: inline-flex;
+  justify-self: end;
+  align-items: center;
+  gap: .65rem;
+  padding: .55rem .85rem;
   font: inherit;
-  color: var(--ink);
+  font-size: 1.05rem;
+  color: var(--ivory);
   background: transparent;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--ivory);
   border-radius: var(--radius);
   cursor: pointer;
+}
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 20px;
+}
+.menu-icon span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+}
+html.js .nav-toggle:hover {
+  color: var(--navy);
+  background: var(--ivory);
+}
+.site-header :focus-visible {
+  outline-color: var(--logo-gold);
 }
 html.js .main-nav { display: none; }
 html.js .main-nav.is-open { display: block; }
 html.js .main-nav.is-open ul { flex-direction: column; }
 
-@media (min-width: 62em) {
-  .main-nav { width: auto; }
-  html.js .nav-toggle { display: none; }
-  html.js .main-nav,
-  html.js .main-nav.is-open { display: block; }
-  html.js .main-nav.is-open ul { flex-direction: row; }
+@media (max-width: 47.99em) {
+  .header-inner { grid-template-columns: minmax(0, 1fr) auto; }
+  .logo { grid-column: 1; grid-row: 1; }
+  .logo-subtitle { grid-column: 1 / -1; grid-row: 2; }
+  .nav-toggle { grid-column: 2; grid-row: 1; }
+  .main-nav { grid-row: 3; }
 }
 
-/* ---------- Bottoni ---------- */
+@media (max-width: 24em) {
+  .logo img { width: 52px; height: 52px; }
+  .logo-title { font-size: 1.2rem; }
+  html.js .nav-toggle {
+    gap: .45rem;
+    padding: .4rem .55rem;
+    font-size: .95rem;
+  }
+  .menu-icon { width: 18px; }
+}
+
+@media (min-width: 62em) {
+  html.js .main-nav.is-open ul {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Buttons ---------- */
 .btn {
   display: inline-block;
   padding: .75rem 1.4rem;
@@ -172,7 +257,7 @@ html.js .main-nav.is-open ul { flex-direction: column; }
 
 .hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
 
-/* ---------- Sezioni ---------- */
+/* ---------- Sections ---------- */
 .section { padding-block: var(--space); }
 .section-alt { background: var(--paper); border-block: 1px solid var(--line); }
 .section-intro { color: var(--ink-soft); margin-bottom: 2rem; }
@@ -192,7 +277,7 @@ html.js .main-nav.is-open ul { flex-direction: column; }
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
 
-/* ---------- Hero: gessato (il segno distintivo del sito) ---------- */
+/* ---------- Hero: pinstripe ---------- */
 .hero {
   padding-block: var(--space);
   background:
@@ -214,7 +299,10 @@ html.js .main-nav.is-open ul { flex-direction: column; }
 .hero-figure { margin: 0; }
 .hero-cloth {
   display: block;
+  width: 100%;
   aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center;
   border-radius: var(--radius);
   background:
     linear-gradient(135deg, transparent 49.6%, rgba(255, 255, 255, .85) 49.6%, rgba(255, 255, 255, .85) 50.4%, transparent 50.4%),
@@ -255,7 +343,7 @@ figcaption { margin-top: .6rem; font-size: .9rem; color: var(--ink-soft); }
 }
 .atelier-figure { margin: 0; }
 
-/* ---------- Servizi: bordo tratteggiato = cucitura ---------- */
+/* ---------- Services: dashed border suggests stitching ---------- */
 .service {
   padding: 1.25rem 1.25rem 1.25rem 1.5rem;
   background: var(--chalk);
@@ -265,7 +353,7 @@ figcaption { margin-top: .6rem; font-size: .9rem; color: var(--ink-soft); }
 }
 .service p { margin-bottom: 0; color: var(--ink-soft); }
 
-/* ---------- Processo: sequenza reale, numerata ---------- */
+/* ---------- Process: numbered steps ---------- */
 .steps {
   list-style: none;
   padding: 0;
@@ -292,7 +380,7 @@ figcaption { margin-top: .6rem; font-size: .9rem; color: var(--ink-soft); }
 }
 .steps p { color: var(--ink-soft); }
 
-/* ---------- Realizzazioni: campioni di tessuto in CSS ---------- */
+/* ---------- Portfolio: CSS fabric swatches ---------- */
 .gallery { margin-top: 1.5rem; }
 .gallery figure { margin: 0; }
 .swatch {
@@ -325,7 +413,7 @@ figcaption { margin-top: .6rem; font-size: .9rem; color: var(--ink-soft); }
     var(--linen);
 }
 
-/* ---------- Recensioni ---------- */
+/* ---------- Reviews ---------- */
 .reviews { margin-top: 1.5rem; }
 blockquote {
   margin: 0;
@@ -418,7 +506,7 @@ summary {
 details[open] summary { border-bottom: 1px solid var(--line); }
 details p { padding: .9rem 1.1rem 0; }
 
-/* ---------- Orari ---------- */
+/* ---------- Hours ---------- */
 .orari {
   width: 100%;
   border-collapse: collapse;
@@ -449,7 +537,7 @@ details p { padding: .9rem 1.1rem 0; }
   margin: 0 0 1rem;
 }
 
-/* ---------- Preferenze utente e stampa ---------- */
+/* ---------- User preferences and print ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
