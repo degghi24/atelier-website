@@ -1,0 +1,54 @@
+/* ==========================================================
+   Atelier Tang - mobile.css
+   Small screens (narrower than 48em). Loaded after style.css with
+   media="screen and (max-width: 47.99em)".
+   ========================================================== */
+
+/* ---------- Menu ---------- */
+.main-nav { flex-basis: 100%; margin-left: 0; }
+.main-nav .nav-area { margin-left: 0; }
+
+/* main.js adds the menu button; its aria-expanded attribute opens the menu. */
+html.js .nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  min-height: 2.75rem;
+  padding: .5rem .85rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--ivory);
+  background: transparent;
+  border: 1px solid var(--ivory);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+html.js .nav-toggle:hover { color: var(--navy); background: var(--ivory); }
+html.js .main-nav { display: none; }
+html.js .nav-toggle[aria-expanded="true"] + .main-nav { display: block; }
+html.js .nav-toggle[aria-expanded="true"] + .main-nav ul {
+  flex-direction: column;
+  align-items: stretch;
+  padding-bottom: .5rem;
+}
+
+/* ---------- Site search ---------- */
+.site-search { flex: 1 1 100%; }
+.site-search input[type="search"] { flex: 1 1 10em; width: auto; }
+
+/* ---------- Label and value lists stack on narrow screens ---------- */
+@media (max-width: 30em) {
+  .spec-list div { grid-template-columns: minmax(0, 1fr); gap: .15rem; }
+  .request-details { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .request-details dd { margin-bottom: .6rem; }
+}
+
+/* ---------- Very small screens and 400% zoom ---------- */
+@media (max-width: 24em) {
+  .header-content { column-gap: .5rem; }
+  .brand { gap: .6rem; }
+  .brand-mark { width: 40px; height: 40px; }
+  .brand-name { font-size: 1.3em; }
+  .brand-tagline { font-size: .78em; }
+  html.js .nav-toggle { gap: .45rem; padding: .45rem .6rem; }
+}

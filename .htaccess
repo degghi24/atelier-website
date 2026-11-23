@@ -1,0 +1,8 @@
+# Used only when XAMPP serves the whole repository (Docker serves src/ instead).
+# Blocks access to repository files that must not be public, such as .env and .git.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule (^|/)\. - [F,L]
+  RewriteRule ^(db|docs)(/|$) - [F,L]
+  RewriteRule ^(compose\.yaml|Dockerfile|readme\.md)$ - [F,L]
+</IfModule>

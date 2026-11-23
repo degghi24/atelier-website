@@ -1,0 +1,71 @@
+/* ==========================================================
+   Atelier Tang - print.css
+   Printed pages show only text and tables: no menus, no links,
+   no images and no backgrounds. Loaded with media="print"; the
+   screen stylesheets are not used when printing.
+   ========================================================== */
+
+@page { margin: 2cm; }
+
+* {
+  color: #000 !important;
+  background: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12pt;
+  line-height: 1.5;
+}
+
+h1, h2, h3, legend, caption {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  line-height: 1.2;
+  page-break-after: avoid;
+}
+h1 { font-size: 20pt; margin: 0 0 8pt; }
+h2 { font-size: 16pt; margin: 16pt 0 6pt; }
+h3 { font-size: 13pt; margin: 12pt 0 4pt; }
+p, li, dd { orphans: 3; widows: 3; }
+
+/* Navigation, forms, images and decorations are not printed. */
+.skip-link, .site-header, .page-tools, nav, form, .hero-actions, .cta, .explore,
+.request-actions, .account-info, .faq-more, figure, picture, img, .swatch,
+.search-suggestions, .sr-text {
+  display: none !important;
+}
+
+/* Links and abbreviations print as normal text. */
+a, abbr[title] { text-decoration: none; }
+address { font-style: normal; }
+
+/* Hidden helper text stays hidden, as on screen. */
+.error:empty { display: none; }
+
+ul, ol { padding-left: 1.5em; }
+.hero-facts, .values, .contact-list, .benefit-list, .service-list, .fabric-list,
+.request-list, .directions-list, .search-results { padding-left: 0; list-style: none; }
+.hero-facts li, .contact-list li, .values li { margin-bottom: 4pt; }
+
+.service, .fabric, .request, .search-result, details, tr { page-break-inside: avoid; }
+.service, .fabric, .request { margin-bottom: 10pt; padding-bottom: 6pt; border-bottom: 1px solid #000; }
+
+dl div, .service-details div, .fabric-details div, .spec-list div { margin-bottom: 2pt; }
+dt { font-weight: bold; }
+dd { margin: 0 0 4pt; }
+
+/* Tables keep their borders so they stay readable. */
+table { width: 100%; border-collapse: collapse; margin: 6pt 0 12pt; }
+caption { text-align: left; padding-bottom: 4pt; }
+th, td { padding: 4pt 6pt; text-align: left; vertical-align: top; border: 1px solid #000; }
+
+/* Collapsed FAQ answers are opened by main.js before printing. */
+summary { font-weight: bold; list-style: none; }
+
+.site-footer { margin-top: 18pt; padding-top: 8pt; border-top: 1px solid #000; }
+.footer-brand { font-weight: bold; }
+.footer-legal { font-size: 9pt; }
