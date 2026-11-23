@@ -1,6 +1,7 @@
 # Local environment and credentials
 .env
 app/config_locale.php
+src/includes/config.local.php
 
 # Operating system files
 .DS_Store

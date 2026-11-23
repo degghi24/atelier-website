@@ -1,0 +1,2 @@
+# Shared PHP files are included by the pages and must not be requested directly.
+Require all denied
